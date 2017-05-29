@@ -2,45 +2,72 @@
 
 public class CircularQueue<T>
 {
-    private const int DefaultCapacity = 4;
+    private const int DefaultCapacity = 16;
+
+    private T[] elements;
+    private int startIndex = 0;
+    private int endIndex = 0;
 
     public int Count { get; private set; }
 
     public CircularQueue(int capacity = DefaultCapacity)
     {
-        // TODO
-        throw new NotImplementedException();
+        this.elements = new T[capacity];
     }
 
     public void Enqueue(T element)
     {
-        // TODO
-        throw new NotImplementedException();
+        if (this.Count >= this.elements.Length)
+        {
+            this.Grow();
+        }
+        this.elements[this.endIndex] = element;
+        this.endIndex = (this.endIndex + 1) % this.elements.Length;
+        this.Count++;
     }
 
-    private void Resize()
+    private void Grow()
     {
-        // TODO
-        throw new NotImplementedException();
+        var newElements = new T[2 * this.elements.Length];
+        this.CopyAllElements(newElements);
+        this.elements = newElements;
+        this.startIndex = 0;
+        this.endIndex = this.Count;
     }
+
+   
 
     private void CopyAllElements(T[] newArray)
     {
-        // TODO
-        throw new NotImplementedException();
+        int sourceIndex = this.startIndex;
+        int destinationIndex = 0;
+        for (int i = 0; i < this.Count; i++)
+        {
+            newArray[destinationIndex] = this.elements[sourceIndex];
+            sourceIndex = (sourceIndex + 1) % this.elements.Length;
+            destinationIndex++;
+        }
     }
 
     // Should throw InvalidOperationException if the queue is empty
     public T Dequeue()
     {
-        // TODO
-        throw new NotImplementedException();
+        if (this.Count == 0)
+        {
+            throw new InvalidOperationException("The queue is empty!");
+        }
+
+        var result = this.elements[startIndex];
+        this.startIndex = (this.startIndex + 1) % this.elements.Length;
+        this.Count--;
+        return result;
     }
 
     public T[] ToArray()
     {
-        // TODO
-        throw new NotImplementedException();
+        var resultArr = new T[this.Count];
+        this.CopyAllElements(resultArr);
+        return resultArr;
     }
 }
 
