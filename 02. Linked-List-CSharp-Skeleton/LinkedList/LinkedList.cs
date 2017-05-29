@@ -37,7 +37,7 @@ public class LinkedList<T> : IEnumerable<T>
 
     private bool IsEmpty()
     {
-        return this.Head == null;
+        return this.Count == 0;
     }
 
     public void AddLast(T item)
@@ -104,7 +104,7 @@ public class LinkedList<T> : IEnumerable<T>
 
     private Node GetSecondToLast()
     {
-        
+
         var currentNode = this.Head;
         while (true)
         {
@@ -114,6 +114,15 @@ public class LinkedList<T> : IEnumerable<T>
             }
             currentNode = currentNode.Next;
         }
+
+        //var list = new List<Node>();
+        //var current = this.Head;
+        //while (current != null)
+        //{
+        //    list.Add(current);
+        //    current = current.Next;
+        //}
+        //return list[list.Count - 2];
     }
 
 
