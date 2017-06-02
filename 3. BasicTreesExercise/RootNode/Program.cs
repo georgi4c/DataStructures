@@ -20,17 +20,75 @@ namespace RootNode
             //Console.WriteLine($"Middle nodes: {string.Join(" ", MiddleNodes())}");
             //Console.WriteLine($"Deepest node: {DeepestNode().Value}");
             //Console.WriteLine($"Longest path: {string.Join(" ", LongestPath())}");
-            AllPathsWithSum();
-            
+            //AllPathsWithSum();
+            AllSubtreesWithSum();
+
 
         }
 
+        private static void AllSubtreesWithSum()
+        {
+            var nodesWithSumSubpaths = new List<Tree<int>>();
+            var target = int.Parse(Console.ReadLine());
+            var root = GetRootNode();
+            var rootSum = SumDFS(root);
+            if (rootSum == target)
+            {
+                nodesWithSumSubpaths.Add(root);
+            }
+
+            GetSubtreeSum(root, nodesWithSumSubpaths, target);
+            
+            Console.WriteLine($"Subtrees of sum {target}:");
+            foreach (var node in nodesWithSumSubpaths)
+            {
+                var elements = new List<int>();
+                ValuesDFS(node, elements);
+                Console.WriteLine(string.Join(" ", elements));
+            }
+
+        }
+
+        private static void GetSubtreeSum(Tree<int> root, List<Tree<int>> nodesWithSumSubpaths, int target)
+        {
+            foreach (var child in root.Children)
+            {
+                
+                var currentSum = SumDFS(child);
+                if (currentSum == target)
+                {
+                    nodesWithSumSubpaths.Add(child);
+                }
+                
+                GetSubtreeSum(child, nodesWithSumSubpaths, target);
+            }
+        }
+
+        private static void ValuesDFS(Tree<int> currentElement, List<int> values)
+        {
+            values.Add(currentElement.Value);
+            foreach (var child in currentElement.Children)
+            {
+                ValuesDFS(child, values);
+            }
+            
+        }
+
+        private static int SumDFS(Tree<int> currentElement)
+        {
+            int sum = 0;
+            foreach (var child in currentElement.Children)
+            {
+                sum += SumDFS(child);
+            }
+            return sum + currentElement.Value;
+        }
         static void AllPathsWithSum()
         {
             var desiredSum = int.Parse(Console.ReadLine());
             var root = GetRootNode();
             var nodesWithDesiredSum = new List<Tree<int>>();
-            FindPathsWithSum( root, nodesWithDesiredSum, desiredSum);
+            FindPathsWithSum(root, nodesWithDesiredSum, desiredSum);
             List<List<int>> result = new List<List<int>>();
             foreach (var node in nodesWithDesiredSum)
             {
